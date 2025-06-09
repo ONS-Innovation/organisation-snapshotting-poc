@@ -5,6 +5,7 @@ A PoC tool to produce a PDF report from GitHub Policy Data.
 
 - [Contents](#contents)
 - [Getting Started](#getting-started)
+- [Designs](#designs)
 
 ## Getting Started
 
@@ -35,3 +36,7 @@ A PoC tool to produce a PDF report from GitHub Policy Data.
     ```
 
 Go to `http://localhost:8501` in your web browser to view the application.
+
+## Designs
+
+![Designs](./org_snapshotting_PoC.drawio.png)
