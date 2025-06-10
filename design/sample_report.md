@@ -22,8 +22,8 @@
 | Check Name | Total Compliant Repositories | Total Non-Compliant Repositories | Compliance Percentage |
 |------------|------------------------------|----------------------------------|-----------------------|
 | Check 1    | X                            | Y                                | Z%                    |
-| Check 2    | X                            | Y                                | Z%                    |
-| Check 3    | X                            | Y                                | Z%                    |
+| ...        | X                            | Y                                | Z%                    |
+| Check n    | X                            | Y                                | Z%                    |
 |------------|------------------------------|----------------------------------|-----------------------|
 | Total      | X                            | Y                                | Z%                    |
 
@@ -72,8 +72,8 @@ Top 5 Repositories with Dependabot Alerts:
 
 ## Repository Appendix
 
-| Repository Name | Check 1 | Check 2 | Check n | Secret Scanning Alerts | Dependabot Alerts |
+| Repository Name | Check 1 | ...     | Check n | Secret Scanning Alerts | Dependabot Alerts |
 |-----------------|---------|---------|---------|------------------------|-------------------|
 | Repo 1          | Yes     | No      | Yes     | 2                      | 1                 |
-| Repo 2          | No      | Yes     | Yes     | 0                      | 3                 |
-| Repo 3          | Yes     | Yes     | No      | 1                      | 0                 |
+| ...             | No      | Yes     | Yes     | 0                      | 3                 |
+| Repo n          | Yes     | Yes     | No      | 1                      | 0                 |
