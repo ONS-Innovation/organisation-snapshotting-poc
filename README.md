@@ -41,7 +41,7 @@ Go to `http://localhost:8501` in your web browser to view the application.
 
 ## Design
 
-![Designs](./org_snapshotting_PoC.drawio.png)
+![Designs](./design/org_snapshotting_PoC.drawio.png)
 
 ### Process Flow
 
