@@ -1,42 +1,10 @@
-# Organisation Snapshotting PoC
-A PoC tool to produce a PDF report from GitHub Policy Data.
+# GitHub Policy Reports (PoC)
 
-## Contents
+This repository contains a proof of concept (PoC) tool to produce markdown and PDF reports from GitHub Policy Data. The reports are generated from the data collected by the GitHub Policy Dashboard.
 
-- [Contents](#contents)
-- [Getting Started](#getting-started)
-- [Designs](#designs)
-
-## Getting Started
-
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/ONS-Innovation/org-snapshotting-poc
-    ```
-2. Navigate to the project directory:
-    ```bash
-    cd org-snapshotting-poc
-    ```
-3. Create and activate a virtual environment:
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
-4. Install the required packages:
-    ```bash
-    poetry install
-    ```
-5. Set up the environment variables:
-    ```bash
-    TBC
-    ```
-6. Run the application:
-    ```bash
-    streamlit run src/main.py
-    ```
-
-Go to `http://localhost:8501` in your web browser to view the application.
-
-## Designs
-
-![Designs](./org_snapshotting_PoC.drawio.png)
+This repository contains the following components:
+- **Lambda Function**: A serverless function that processes the GitHub Policy Data and generates markdown reports.
+- **GitHub Action**: A workflow that converts the markdown reports to PDF and releases them to GitHub.
+- **Markdown Reports**: The generated markdown reports that provide insights into the GitHub Policy Data.
+- **MkDocs**: A static site generator that hosts the markdown reports on GitHub Pages (optional).
+- 
