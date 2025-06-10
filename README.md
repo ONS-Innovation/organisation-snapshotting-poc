@@ -31,10 +31,12 @@ A PoC tool to produce a PDF report from GitHub Policy Data.
     ```bash
     export AWS_ACCESS_KEY_ID=<aws_access_key_id> 
     export AWS_SECRET_ACCESS_KEY=<aws_secret_access_key_id>
+    export GITHUB_ORG=<github_org>
+    export ENVIRONMENT=<sdp-prod|sdp-dev>
     ```
 6. Run the application:
     ```bash
-    poetry run src/main.py
+    poetry run python3 src/main.py
     ```
 
 Go to `http://localhost:8501` in your web browser to view the application.
