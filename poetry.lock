@@ -296,6 +296,22 @@ test = ["certifi (>=2024)", "cryptography-vectors (==45.0.4)", "pretend (>=0.7)"
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
+name = "github_api_toolkit"
+version = "0.1.0"
+description = "A toolkit for interacting with the GitHub API"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = []
+develop = false
+
+[package.source]
+type = "git"
+url = "https://github.com/ONS-Innovation/github-api-package.git"
+reference = "v2.0.3"
+resolved_reference = "101a7fd5c2239ba8b18b5f5bc7bbd70f804fe43f"
+
+[[package]]
 name = "idna"
 version = "3.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -605,4 +621,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "3f8703495cacf71ef77678cf9ed445c4c2c573ee81857fadff3b5f3b9d58173f"
+content-hash = "d04c6173a34dcddc4c67c34eefe10fdf9134b9f9fd28088ddb83431f9cb46e76"

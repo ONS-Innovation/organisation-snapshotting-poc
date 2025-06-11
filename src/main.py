@@ -6,6 +6,9 @@ import json
 import os
 import datetime
 import pandas as pd
+import github_api_toolkit
+import requests
+import base64
 
 org = os.getenv('GITHUB_ORG', 'ONSdigital')
 environment = os.getenv('ENVIRONMENT', 'sdp-prod')
@@ -200,4 +203,30 @@ with open("report.md", "w") as f:
 
 # Push to GitHub Repository
 
+secret_name = os.getenv("AWS_SECRET_NAME")
+github_app_client_id = os.getenv("GITHUB_APP_CLIENT_ID")
 
+secret = secret_manager.get_secret_value(SecretId=secret_name).get("SecretString")
+
+token = github_api_toolkit.get_token_as_installation(org, secret, github_app_client_id)
+rest = github_api_toolkit.github_interface(token[0])
+
+response = rest.get(f"/repos/{org}/github-policy-reports/contents/report.md")
+json = response.json()
+
+sha = json.get("sha", None)
+
+new_file_content = base64.b64encode(markdown_report.encode('utf-8'))
+
+if sha:
+    response = requests.put(
+        url=f"https://api.github.com/repos/{org}/github-policy-reports/contents/report.md",
+        headers={
+            "Authorization": "token " + token[0]
+        },
+        json={
+            "message": f"Update report for {org} on {datetime.datetime.now().strftime('%Y-%m-%d @ %H:%M')}",
+            "content": new_file_content.decode('utf-8'),
+            "sha": sha
+        }
+    )
