@@ -8,6 +8,7 @@ A PoC script to produce a Markdown Report using GitHub Policy Data and push it t
 - [Generating the PDF Report](#generating-the-pdf-report)
 - [Design](#design)
   - [Process Flow](#process-flow)
+- [Next Steps](#next-steps)
 
 ## Getting Started
 
@@ -95,3 +96,15 @@ You can view the generated PDF report in the `output.pdf` file.
 4. Setup a GitHub Action to convert the markdown report to PDF (Pandoc).
 5. Release the PDF report to a GitHub release.
 6. MkDocs Setup to host the markdown report on GitHub Pages (Optional).
+
+## Next Steps
+
+- Convert the Python script to a Lambda function.
+- Create Terraform scripts to deploy the Lambda function and other resources.
+- Linting + Testing.
+- Update report to be of an agreed format:
+    - Diagrams / Charts?
+    - A3 or A4?
+    - More information?
+- Make which GitHub repository the report is pushed to configurable.
+- Another markdown report to be generated excluding any Latex formatting so that it can be used as an output.
