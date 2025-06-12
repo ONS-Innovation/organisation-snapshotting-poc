@@ -1,5 +1,5 @@
 # Organisation Snapshotting Lambda
-A PoC tool to produce a PDF report from GitHub Policy Data.
+A PoC script to produce a Markdown Report using GitHub Policy Data and push it to a GitHub Repository.
 
 ## Contents
 
@@ -31,17 +31,21 @@ A PoC tool to produce a PDF report from GitHub Policy Data.
     ```bash
     export AWS_ACCESS_KEY_ID=<aws_access_key_id> 
     export AWS_SECRET_ACCESS_KEY=<aws_secret_access_key_id>
+    export AWS_SECRET_NAME=<path_to_pem_file>
+    export GITHUB_ORG=<github_org>
+    export GITHUB_APP_CLIENT_ID=<github_app_client_id>
+    export ENVIRONMENT=<sdp-prod|sdp-dev>
     ```
 6. Run the application:
     ```bash
-    poetry run src/main.py
+    python3 src/main.py
     ```
 
-Go to `http://localhost:8501` in your web browser to view the application.
+This will generate a markdown report and push it to the specified GitHub repository.
 
 ## Design
 
-![Designs](./org_snapshotting_PoC.drawio.png)
+![Designs](./design/org_snapshotting_PoC.drawio.png)
 
 ### Process Flow
 
