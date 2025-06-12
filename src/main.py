@@ -85,41 +85,49 @@ df_repositories.rename(columns=maps, inplace=True)
 
 # Make Markdown report
 
-markdown_report = f"# {org} Audit Report ({datetime.datetime.now().strftime('%Y-%m-%d')})\n\n"
+markdown_report = f"""---
+title: {org} GitHub Policy Report
+date: {datetime.datetime.now().strftime('%Y-%m-%d @ %H:%M')}
+author: Knowledge Exchange Hub
+abstract: This report provides an overview of the compliance status of repositories within the {org} organisation on GitHub. It includes details on secret scanning alerts, dependabot alerts, and repository compliance checks.
+documentclass: report
+geometry: 
+- a4paper, 
+- margin=1in
+- landscape
+titlepage: true
+toc: true
+toc-own-page: true
+header-left: "\\\\thetitle"
+header-right: "\\\\thedate"
+footer-left: "\\\\theauthor"
+footer-right: "\\\\thepage"
+table-use-row-colors: true
+header-includes:
+  \\usepackage{{geometry}}
 
-markdown_report += f"## Report Details\n\n"
+---\n\n"""
 
-markdown_report += f"- Generated on: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-markdown_report += f"- Organisation: {org}\n\n"
-
-markdown_report += "## Contents\n\n"
-
-markdown_report += "- [Organisation Overview](#organisation-overview)\n"
-markdown_report += "- [Repository Compliance Breakdown](#repository-compliance-breakdown)\n"
-markdown_report += "- [Secret Scanning Alerts Overview](#secret-scanning-alerts-overview)\n"
-markdown_report += "- [Dependabot Alerts Overview](#dependabot-alerts-overview)\n"
-markdown_report += "- [Repository Appendix](#repository-appendix)\n\n"
-
-markdown_report += "\pagebreak\n\n"
+markdown_report += "\\pagebreak\n\n"
 
 markdown_report += "## Organisation Overview\n\n"
 
-markdown_report += f"- Total Repositories: {len(repositories)}\n"
-markdown_report += f"- Total Secret Scanning Alerts: {len(secret_scanning)}\n"
-markdown_report += f"- Total Dependabot Alerts: {len(dependabot)}\n\n"
+markdown_report += f"- **Total Repositories:** {len(repositories)}\n"
+markdown_report += f"- **Total Secret Scanning Alerts:** {len(secret_scanning)}\n"
+markdown_report += f"- **Total Dependabot Alerts:** {len(dependabot)}\n\n"
 
-markdown_report += f"- Total Repository Compliance: {(df_repositories['is_compliant'].sum() / len(df_repositories))*100:.2f}%\n"
-markdown_report += f"- Average Secret Scanning Alerts per Repository: {len(secret_scanning) / len(repositories):.2f}\n"
-markdown_report += f"- Average Dependabot Alerts per Repository: {len(dependabot) / len(repositories):.2f}\n\n"
+markdown_report += f"- **Total Repository Compliance:** {(df_repositories['is_compliant'].sum() / len(df_repositories))*100:.2f}%\n"
+markdown_report += f"- **Average Secret Scanning Alerts per Repository:** {len(secret_scanning) / len(repositories):.2f}\n"
+markdown_report += f"- **Average Dependabot Alerts per Repository:** {len(dependabot) / len(repositories):.2f}\n\n"
 
 markdown_report += "\pagebreak\n\n"
 
 markdown_report += "## Repository Compliance Breakdown\n\n"
 
 least_complied_check = df_repositories.iloc[:, 4:-1].sum().idxmin()
-markdown_report += f"- Least Complied to Check: {least_complied_check.replace('_', ' ').title()}\n\n"
+markdown_report += f"- **Least Complied to Check:** {least_complied_check.replace('_', ' ').title()}\n\n"
 markdown_report += "| Check Name | Total Compliant Repositories | Total Non-Compliant Repositories | Compliance Percentage |\n"
-markdown_report += "|------------|------------------------------|----------------------------------|-----------------------|\n"
+markdown_report += "|--------|-----|-----|----|\n"
 
 for column in df_repositories.columns[4:-1]:
     compliant_count = df_repositories[column].sum()
@@ -130,14 +138,14 @@ markdown_report += "\n\pagebreak\n\n"
 
 markdown_report += "## Secret Scanning Alerts Overview\n\n"
 
-markdown_report += f"- Total Secret Scanning Alerts: {len(secret_scanning)}\n"
+markdown_report += f"- **Total Secret Scanning Alerts:** {len(secret_scanning)}\n"
 
 if len(secret_scanning) != 0:
 
-    markdown_report += f"- Total Repositories with Secret Scanning Alerts: {df_secret_scanning['repository'].nunique()}\n"
-    markdown_report += f"- Average Alerts per Repository: {len(secret_scanning) / df_secret_scanning['repository'].nunique():.2f}\n\n"
+    markdown_report += f"- **Total Repositories with Secret Scanning Alerts:** {df_secret_scanning['repository'].nunique()}\n"
+    markdown_report += f"- **Average Alerts per Repository:** {len(secret_scanning) / df_secret_scanning['repository'].nunique():.2f}\n\n"
 
-    markdown_report += "Top 5 Repositories with Most Secret Scanning Alerts:\n\n"
+    markdown_report += "### Top 5 Repositories with Most Secret Scanning Alerts:\n\n"
 
     markdown_report += "| Repository | Total Alerts |\n"
     markdown_report += "|------------|--------------|\n"
@@ -150,14 +158,14 @@ markdown_report += "\n\pagebreak\n\n"
 
 markdown_report += "## Dependabot Alerts Overview\n\n"
 
-markdown_report += f"- Total Dependabot Alerts: {len(dependabot)}\n"
+markdown_report += f"- **Total Dependabot Alerts:** {len(dependabot)}\n"
 
 if len(dependabot) != 0:
 
-    markdown_report += f"- Total Repositories with Dependabot Alerts: {df_dependabot['repository'].nunique()}\n"
-    markdown_report += f"- Average Alerts per Repository: {len(dependabot) / df_dependabot['repository'].nunique():.2f}\n\n"
+    markdown_report += f"- **Total Repositories with Dependabot Alerts:** {df_dependabot['repository'].nunique()}\n"
+    markdown_report += f"- **Average Alerts per Repository:** {len(dependabot) / df_dependabot['repository'].nunique():.2f}\n\n"
 
-    markdown_report += "Top 5 Repositories with Most Dependabot Alerts:\n\n"
+    markdown_report += "### Top 5 Repositories with Most Dependabot Alerts\n\n"
 
     markdown_report += "| Repository | Total Alerts |\n"
     markdown_report += "|------------|--------------|\n"
@@ -182,6 +190,7 @@ if len(dependabot) != 0:
         markdown_report += f"| {severity} | {count} | {percentage:.2f}% |\n"
 
 markdown_report += "\n\pagebreak\n\n"
+markdown_report += "\\newgeometry{margin=5mm}\n\n"
 
 markdown_report += "## Repository Appendix\n\n"
 
@@ -205,13 +214,13 @@ for repo_type in df_repositories["type"].unique():
         df_type_compliance = df_type[df_type["is_compliant"] == compliance]
 
         # Remove columns that are not relevant for the report
-        df_type_compliance = df_type_compliance.drop(columns=["created_at", "url", "is_compliant"])
+        df_type_compliance = df_type_compliance.drop(columns=["type", "created_at", "url", "is_compliant"])
 
         for column in df_type_compliance.columns:
             markdown_report += f" | {column.replace('_', ' ').title()}"
 
         markdown_report += " |\n"
-        markdown_report += "|---------------" # Manually add separator for the first column to ensure larger width
+        markdown_report += "|-----------" # Manually add separator for the first column to ensure larger width
         markdown_report += "|---" * (len(df_type_compliance.columns)-1) + "|\n"
 
         df_type_compliance = df_type_compliance.sort_values(by=["name"])
