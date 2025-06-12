@@ -100,6 +100,8 @@ markdown_report += "- [Secret Scanning Alerts Overview](#secret-scanning-alerts-
 markdown_report += "- [Dependabot Alerts Overview](#dependabot-alerts-overview)\n"
 markdown_report += "- [Repository Appendix](#repository-appendix)\n\n"
 
+markdown_report += "\pagebreak\n\n"
+
 markdown_report += "## Organisation Overview\n\n"
 
 markdown_report += f"- Total Repositories: {len(repositories)}\n"
@@ -109,6 +111,8 @@ markdown_report += f"- Total Dependabot Alerts: {len(dependabot)}\n\n"
 markdown_report += f"- Total Repository Compliance: {(df_repositories['is_compliant'].sum() / len(df_repositories))*100:.2f}%\n"
 markdown_report += f"- Average Secret Scanning Alerts per Repository: {len(secret_scanning) / len(repositories):.2f}\n"
 markdown_report += f"- Average Dependabot Alerts per Repository: {len(dependabot) / len(repositories):.2f}\n\n"
+
+markdown_report += "\pagebreak\n\n"
 
 markdown_report += "## Repository Compliance Breakdown\n\n"
 
@@ -122,7 +126,9 @@ for column in df_repositories.columns[4:-1]:
 
     markdown_report += f"| {column.replace("_"," ").title()} | {compliant_count} | {len(repositories) - compliant_count} | {compliant_count / len(repositories) * 100:.2f}% |\n"
 
-markdown_report += "\n## Secret Scanning Alerts Overview\n\n"
+markdown_report += "\n\pagebreak\n\n"
+
+markdown_report += "## Secret Scanning Alerts Overview\n\n"
 
 markdown_report += f"- Total Secret Scanning Alerts: {len(secret_scanning)}\n"
 
@@ -140,7 +146,9 @@ if len(secret_scanning) != 0:
     for repo, count in top_secret_scanning_repos.items():
         markdown_report += f"| {repo} | {count} |\n"
 
-markdown_report += "\n## Dependabot Alerts Overview\n\n"
+markdown_report += "\n\pagebreak\n\n"
+
+markdown_report += "## Dependabot Alerts Overview\n\n"
 
 markdown_report += f"- Total Dependabot Alerts: {len(dependabot)}\n"
 
@@ -173,9 +181,18 @@ if len(dependabot) != 0:
         percentage = (count / len(dependabot)) * 100
         markdown_report += f"| {severity} | {count} | {percentage:.2f}% |\n"
 
-markdown_report += "\n## Repository Appendix\n\n"
+markdown_report += "\n\pagebreak\n\n"
+
+markdown_report += "## Repository Appendix\n\n"
+
+count = 0
 
 for repo_type in df_repositories["type"].unique():
+
+    count += 1
+
+    if count > 1:
+        markdown_report += "\pagebreak\n\n"
 
     markdown_report += f"### {repo_type.title()} Repositories\n\n"
     
@@ -187,13 +204,17 @@ for repo_type in df_repositories["type"].unique():
 
         df_type_compliance = df_type[df_type["is_compliant"] == compliance]
 
+        # Remove columns that are not relevant for the report
+        df_type_compliance = df_type_compliance.drop(columns=["created_at", "url", "is_compliant"])
+
         for column in df_type_compliance.columns:
             markdown_report += f" | {column.replace('_', ' ').title()}"
 
         markdown_report += " |\n"
-        markdown_report += "|---" * len(df_type_compliance.columns) + "|\n"
+        markdown_report += "|---------------" # Manually add separator for the first column to ensure larger width
+        markdown_report += "|---" * (len(df_type_compliance.columns)-1) + "|\n"
 
-        df_type_compliance = df_type_compliance.sort_values(by=["name", "is_compliant"])
+        df_type_compliance = df_type_compliance.sort_values(by=["name"])
         for index, row in df_type_compliance.iterrows():
             markdown_report += "| " + " | ".join(str(row[col]) for col in df_type_compliance.columns) + " |\n"
         markdown_report += "\n"
