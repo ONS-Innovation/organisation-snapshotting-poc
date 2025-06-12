@@ -248,6 +248,8 @@ print("Report saved to report.md")
 
 push_to_github = os.getenv("GITHUB_PUSH_REPORT", False)
 
+push_to_github = str(push_to_github).lower() in ("true", "1", "yes")
+
 if push_to_github:
 
     print("Pushing report to GitHub...")
