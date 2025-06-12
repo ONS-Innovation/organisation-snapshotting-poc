@@ -17,6 +17,8 @@ session = boto3.Session()
 s3 = session.client('s3')
 secret_manager = session.client('secretsmanager', region_name='eu-west-2')
 
+print("Getting data from S3...")
+
 # Get JSON data from S3
 try:
     repositories = s3.get_object(
@@ -37,6 +39,10 @@ try:
 except ClientError as e:
     print(f"An error occurred: {e}")
     exit(1)
+
+print("Data retrieved successfully.")
+
+print("Converting Data to appropriate formats...")
 
 # Convert JSON data to Python dictionaries
 repositories = json.loads(repositories['Body'].read().decode('utf-8'))
@@ -83,7 +89,11 @@ maps = {
 
 df_repositories.rename(columns=maps, inplace=True)
 
+print("Data conversion complete.")
+
 # Make Markdown report
+
+print("Generating Markdown report...")
 
 markdown_report = f"""---
 title: {org} GitHub Policy Report
@@ -231,32 +241,48 @@ for repo_type in df_repositories["type"].unique():
 with open("report.md", "w") as f:
     f.write(markdown_report)
 
+print("Markdown report generated successfully.")
+print("Report saved to report.md")
+
 # Push to GitHub Repository
 
-secret_name = os.getenv("AWS_SECRET_NAME")
-github_app_client_id = os.getenv("GITHUB_APP_CLIENT_ID")
+push_to_github = os.getenv("GITHUB_PUSH_REPORT", False)
 
-secret = secret_manager.get_secret_value(SecretId=secret_name).get("SecretString")
+if push_to_github:
 
-token = github_api_toolkit.get_token_as_installation(org, secret, github_app_client_id)
-rest = github_api_toolkit.github_interface(token[0])
+    print("Pushing report to GitHub...")
 
-response = rest.get(f"/repos/{org}/github-policy-reports/contents/report.md")
-json = response.json()
+    secret_name = os.getenv("AWS_SECRET_NAME")
+    github_app_client_id = os.getenv("GITHUB_APP_CLIENT_ID")
 
-sha = json.get("sha", None)
+    secret = secret_manager.get_secret_value(SecretId=secret_name).get("SecretString")
 
-new_file_content = base64.b64encode(markdown_report.encode('utf-8'))
+    token = github_api_toolkit.get_token_as_installation(org, secret, github_app_client_id)
+    rest = github_api_toolkit.github_interface(token[0])
 
-if sha:
-    response = requests.put(
-        url=f"https://api.github.com/repos/{org}/github-policy-reports/contents/report.md",
-        headers={
-            "Authorization": "token " + token[0]
-        },
-        json={
-            "message": f"Update report for {org} on {datetime.datetime.now().strftime('%Y-%m-%d @ %H:%M')}",
-            "content": new_file_content.decode('utf-8'),
-            "sha": sha
-        }
-    )
+    response = rest.get(f"/repos/{org}/github-policy-reports/contents/report.md")
+    json = response.json()
+
+    sha = json.get("sha", None)
+
+    new_file_content = base64.b64encode(markdown_report.encode('utf-8'))
+
+    if sha:
+        response = requests.put(
+            url=f"https://api.github.com/repos/{org}/github-policy-reports/contents/report.md",
+            headers={
+                "Authorization": "token " + token[0]
+            },
+            json={
+                "message": f"Update report for {org} on {datetime.datetime.now().strftime('%Y-%m-%d @ %H:%M')}",
+                "content": new_file_content.decode('utf-8'),
+                "sha": sha
+            }
+        )
+
+        print("Report pushed successfully.")
+
+else:
+    print("Skipping push to GitHub as GITHUB_PUSH_REPORT is not set to True.")
+
+print("Process completed successfully.")
