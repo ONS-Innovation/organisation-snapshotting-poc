@@ -1,4 +1,5 @@
 # Organisation Snapshotting Lambda
+
 A PoC script to produce a Markdown Report using GitHub Policy Data and push it to a GitHub Repository.
 
 ## Contents
